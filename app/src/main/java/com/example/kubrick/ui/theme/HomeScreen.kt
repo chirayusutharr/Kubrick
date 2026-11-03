@@ -1,17 +1,25 @@
 
 package com.example.kubrick.ui
 
-import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
-import androidx.compose.foundation.shape.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.layout.ContentScale
@@ -21,210 +29,189 @@ import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.kubrick.data.model.Movie
-import androidx.compose.runtime.*
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.layout.PaddingValues
+import com.kyant.backdrop.backdrops.LayerBackdrop
+import com.kyant.backdrop.backdrops.layerBackdrop
+import androidx.compose.foundation.clickable
+
 
 private const val IMAGE_URL =
     "https://image.tmdb.org/t/p/"
 
-private val Dark = Color(0xFF101719)
-private val CardColor = Color(0xFF202B2F)
-private val Accent = Color(0xFFB8D9D4)
-
-
+val Dark = Color(0xFF101719)
+val CardColor = Color(0xFF202B2F)
+val Accent = Color(0xFFB8D9D4)
 @Composable
-fun HomeScreen(
+fun HomeTabScreen(
+
     vm: HomeViewModel = viewModel()
 ) {
     val state by vm.state.collectAsState()
 
-    var selectedTab by remember {
-        mutableStateOf(0)
-    }
 
-    Scaffold(
-        containerColor = Dark
-    ) { padding ->
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .statusBarsPadding()
+            .verticalScroll(rememberScrollState())
+            .padding(bottom = 110.dp)
+    ) {
 
-        Box(
-            modifier = Modifier.fillMaxSize()
+        // PROFILE HEADER
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
         ) {
 
-            if (selectedTab == 1) {
-
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding),
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(CardColor),
                     contentAlignment = Alignment.Center
                 ) {
+                    Icon(
+                        Icons.Default.Person,
+                        contentDescription = null,
+                        tint = Accent
+                    )
+                }
+
+                Spacer(Modifier.width(12.dp))
+
+                Column {
                     Text(
-                        "Your watchlist",
+                        "Welcome back,",
+                        color = Color.LightGray,
+                        fontSize = 11.sp
+                    )
+
+                    Text(
+                        "Guest",
                         color = Color.White,
-                        fontSize = 22.sp
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
                     )
                 }
+            }
 
-            } else {
-
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(padding)
-                        .verticalScroll(rememberScrollState())
-                        .padding(bottom = 110.dp)
-                ) {
-
-                // PROFILE HEADER
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(20.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Box(
-                            modifier = Modifier
-                                .size(40.dp)
-                                .clip(CircleShape)
-                                .background(CardColor),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(
-                                Icons.Default.Person,
-                                contentDescription = null,
-                                tint = Accent
-                            )
-                        }
-
-                        Spacer(Modifier.width(12.dp))
-
-                        Column {
-                            Text("Welcome back,", color = Color.LightGray, fontSize = 11.sp)
-                            Text(
-                                "Guest",
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
-
-                    IconButton(onClick = {}) {
-                        Icon(
-                            Icons.Default.NotificationsNone,
-                            contentDescription = "Notifications",
-                            tint = Color.White
-                        )
-                    }
-                }
-
-                // SEARCH BAR
-                OutlinedTextField(
-                    value = state.searchText,
-                    onValueChange = vm::updateSearch,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 18.dp),
-                    placeholder = {
-                        Text("Movies, series, shows...", color = Color.LightGray)
-                    },
-                    leadingIcon = {
-                        Icon(Icons.Default.Search, contentDescription = null, tint = Color.LightGray)
-                    },
-                    trailingIcon = {
-                        IconButton(onClick = vm::search) {
-                            Icon(Icons.Default.Tune, contentDescription = "Search", tint = Accent)
-                        }
-                    },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-                    keyboardActions = KeyboardActions(onSearch = { vm.search() }),
-                    shape = RoundedCornerShape(30.dp),
-                    colors = OutlinedTextFieldDefaults.colors(
-                        focusedTextColor = Color.White,
-                        unfocusedTextColor = Color.White,
-                        focusedBorderColor = Accent,
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedContainerColor = CardColor,
-                        unfocusedContainerColor = CardColor
-                    )
+            IconButton(onClick = {}) {
+                Icon(
+                    Icons.Default.NotificationsNone,
+                    contentDescription = "Notifications",
+                    tint = Color.White
                 )
-
-                Spacer(Modifier.height(20.dp))
-
-                // GENRE FILTERS
-                LazyRow(
-                    contentPadding = PaddingValues(horizontal = 18.dp),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
-                ) {
-                    item {
-                        GenreChip("All", state.selectedGenre == null) {
-                            vm.selectGenre(null)
-                        }
-                    }
-
-                    items(state.genres) { genre ->
-                        GenreChip(genre.name, state.selectedGenre == genre.id) {
-                            vm.selectGenre(genre.id)
-                        }
-                    }
-                }
-
-                Spacer(Modifier.height(24.dp))
-
-                // FEATURED BANNER
-                if (state.movies.isNotEmpty()) {
-                    FeaturedBanner(state.movies.first())
-                }
-
-                Spacer(Modifier.height(26.dp))
-
-
-// TRENDING MOVIES
-                // TRENDING
-                MovieSliderSection(
-                    title = "Trending",
-                    movies = state.movies
-                )
-
-// HOTSTAR PICKS
-                MovieSliderSection(
-                    title = "Hotstar Picks",
-                    movies = state.popularMovies
-                )
-
-// ROM-COM
-                MovieSliderSection(
-                    title = "Rom-Com",
-                    movies = state.romComMovies
-                )
-
-// TOP RATED
-                MovieSliderSection(
-                    title = "Top Rated",
-                    movies = state.topRatedMovies
-                )
-
-
-
-
             }
         }
-            GlassBottomBar(
-                selectedTab = selectedTab,
-                onTabSelected = { selectedTab = it },
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 22.dp)
+
+        // SEARCH BAR
+        OutlinedTextField(
+            value = state.searchText,
+            onValueChange = vm::updateSearch,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 18.dp),
+            placeholder = {
+                Text(
+                    "Movies, series, shows...",
+                    color = Color.LightGray
+                )
+            },
+            leadingIcon = {
+                Icon(
+                    Icons.Default.Search,
+                    contentDescription = null,
+                    tint = Color.LightGray
+                )
+            },
+            trailingIcon = {
+                IconButton(onClick = vm::search) {
+                    Icon(
+                        Icons.Default.Tune,
+                        contentDescription = "Search",
+                        tint = Accent
+                    )
+                }
+            },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(
+                imeAction = ImeAction.Search
+            ),
+            keyboardActions = KeyboardActions(
+                onSearch = { vm.search() }
+            ),
+            shape = RoundedCornerShape(30.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedTextColor = Color.White,
+                unfocusedTextColor = Color.White,
+                focusedBorderColor = Accent,
+                unfocusedBorderColor = Color.Transparent,
+                focusedContainerColor = CardColor,
+                unfocusedContainerColor = CardColor
             )
+        )
+
+        Spacer(Modifier.height(20.dp))
+
+        // GENRE FILTERS
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 18.dp),
+            horizontalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+
+            item {
+                GenreChip(
+                    "All",
+                    state.selectedGenre == null
+                ) {
+                    vm.selectGenre(null)
+                }
+            }
+
+            items(state.genres) { genre ->
+                GenreChip(
+                    genre.name,
+                    state.selectedGenre == genre.id
+                ) {
+                    vm.selectGenre(genre.id)
+                }
+            }
         }
+
+        Spacer(Modifier.height(24.dp))
+
+        // FEATURED BANNER
+        if (state.movies.isNotEmpty()) {
+            FeaturedBanner(state.movies.first())
+        }
+
+        Spacer(Modifier.height(26.dp))
+
+        // TRENDING MOVIES
+        MovieSliderSection(
+            title = "Trending",
+            movies = state.movies
+        )
+
+        // TOP RATED MOVIES
+        MovieSliderSection(
+            title = "Top Rated",
+            movies = state.topRatedMovies
+        )
+
+        // HOTSTAR
+        MovieSliderSection(
+            title = "Hotstar",
+            movies = state.topRatedMovies
+        )
     }
 }
+
 
 @Composable
 fun GenreChip(

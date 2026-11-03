@@ -3,7 +3,7 @@ package com.example.kubrick
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import com.example.kubrick.ui.HomeScreen
+import com.example.kubrick.ui.AppNavigation
 
 class MainActivity : ComponentActivity() {
 
@@ -11,7 +11,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            HomeScreen()
+            AppNavigation()
         }
     }
 }

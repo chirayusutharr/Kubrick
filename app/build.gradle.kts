@@ -60,13 +60,16 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
 
+
+//    ackdrop by Kyant,
+    implementation("io.github.kyant0:backdrop:2.0.1")
+//    nav
+    implementation("androidx.navigation:navigation-compose:2.9.6")
     // Material icons
     implementation("androidx.compose.material:material-icons-extended")
-
     // Retrofit + Gson
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-
     // OkHttp
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 

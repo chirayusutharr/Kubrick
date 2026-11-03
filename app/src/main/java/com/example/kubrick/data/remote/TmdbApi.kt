@@ -4,6 +4,9 @@ import com.example.kubrick.data.model.MovieResponse
 import com.example.kubrick.data.model.GenreResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
+import com.example.kubrick.data.model.MovieDetails
+import com.example.kubrick.data.model.CreditsResponse
+import retrofit2.http.Path
 
 interface TmdbApi {
 
@@ -35,4 +38,14 @@ interface TmdbApi {
         @Query("query") query: String,
         @Query("include_adult") includeAdult: Boolean = false
     ): MovieResponse
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(
+        @Path("movie_id") movieId: Int
+    ): MovieDetails
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: Int
+    ): CreditsResponse
 }
