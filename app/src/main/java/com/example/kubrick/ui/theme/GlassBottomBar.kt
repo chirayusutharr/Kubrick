@@ -27,7 +27,7 @@ import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.lens
 import com.kyant.backdrop.effects.vibrancy
 import androidx.compose.foundation.background
-import androidx.compose.ui.draw.clip
+//import androidx.compose.ui.draw.clip
 
 
 @Composable
